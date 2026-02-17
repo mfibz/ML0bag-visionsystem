@@ -54,6 +54,9 @@ def download_from_huggingface(
 ) -> Path:
     """Download a dataset from HuggingFace Hub.
 
+    Uses huggingface_hub snapshot_download to clone the full dataset repository,
+    which is more reliable than the datasets library for image datasets.
+
     Args:
         repo_id: HuggingFace dataset repository ID (e.g. 'user/dataset-name').
         output_dir: Directory to save dataset.
@@ -63,9 +66,9 @@ def download_from_huggingface(
         Path to downloaded dataset.
     """
     try:
-        from datasets import load_dataset
+        from huggingface_hub import snapshot_download
     except ImportError:
-        logger.error("datasets package not installed. Run: pip install datasets")
+        logger.error("huggingface-hub package not installed. Run: pip install huggingface-hub")
         raise
 
     import os
@@ -76,26 +79,19 @@ def download_from_huggingface(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Downloading HuggingFace dataset: {repo_id}")
-    dataset = load_dataset(repo_id, token=token, trust_remote_code=True)
+    downloaded_path = snapshot_download(
+        repo_id=repo_id,
+        repo_type="dataset",
+        local_dir=str(output_dir),
+        token=token,
+    )
 
-    # Save images to disk organized by split
-    for split_name, split_data in dataset.items():
-        split_dir = output_dir / split_name
-        split_dir.mkdir(parents=True, exist_ok=True)
+    # Count downloaded images
+    image_count = 0
+    for ext in ["*.jpg", "*.jpeg", "*.png"]:
+        image_count += len(list(output_dir.rglob(ext)))
 
-        for idx, sample in enumerate(split_data):
-            # Handle image column (common in vision datasets)
-            if "image" in sample:
-                img = sample["image"]
-                label = sample.get("label", "unknown")
-                label_dir = split_dir / str(label)
-                label_dir.mkdir(parents=True, exist_ok=True)
-                img_path = label_dir / f"{idx:06d}.jpg"
-                if not img_path.exists():
-                    img.save(img_path)
-
-        logger.info(f"Saved {len(split_data)} samples to {split_dir}")
-
+    logger.info(f"Downloaded {image_count} images to {output_dir}")
     return output_dir
 
 
