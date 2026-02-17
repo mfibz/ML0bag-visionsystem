@@ -257,6 +257,7 @@ def _process_leather_defects(leather_dir: Path, output_dir: Path) -> None:
     Maps leather defect categories to Phase 2 classes.
     """
     leather_class_map = {
+        # Original expected names
         "scratch": "scratch",
         "scratches": "scratch",
         "holes": "hole",
@@ -265,7 +266,20 @@ def _process_leather_defects(leather_dir: Path, output_dir: Path) -> None:
         "rotten": "wear",
         "fold": "deformation",
         "folds": "deformation",
+        # Actual Kaggle dataset folder names
+        "pinhole": "hole",
+        "loose grains": "wear",
+        "grain off": "wear",
+        "folding marks": "deformation",
+        "growth marks": "discoloration",
+        "non defective": None,  # skip non-defective images
     }
+
+    # Handle nested subfolder (e.g., "Leather Defect Classification/")
+    subdirs = [d for d in leather_dir.iterdir() if d.is_dir()]
+    if len(subdirs) == 1 and not any(leather_dir.glob("*.jpg")):
+        leather_dir = subdirs[0]
+        logger.info(f"  Using nested folder: {leather_dir.name}")
 
     for class_dir in leather_dir.iterdir():
         if not class_dir.is_dir():
@@ -273,7 +287,7 @@ def _process_leather_defects(leather_dir: Path, output_dir: Path) -> None:
 
         class_name = class_dir.name.lower().strip()
         mapped = leather_class_map.get(class_name)
-        if mapped is None:
+        if mapped is None or class_name not in leather_class_map:
             logger.debug(f"  Skipping leather class: {class_name}")
             continue
 
