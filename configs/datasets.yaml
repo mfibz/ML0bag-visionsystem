@@ -1,0 +1,21 @@
+# Dataset configuration for download script
+# Maps to configs/data_sources.yaml but in format expected by download.py
+
+datasets:
+  lffd:
+    source: "huggingface"
+    repo_id: "Innovatiana/innv-luxury-fashion-dataset-fraud-detection"
+    description: "Chanel product images for authentication training"
+
+  roboflow_logos:
+    source: "roboflow"
+    workspace: "cvanddl"
+    project: "detection-bag-logo"
+    version: 1
+    description: "1,920 luxury bag logo images with 24 brand classes"
+
+  leather_defects:
+    source: "url"
+    url: "https://www.kaggle.com/api/v1/datasets/download/praveen2084/leather-defect-classification"
+    filename: "leather-defect-classification.zip"
+    description: "Leather defect images: holes, scratches, dirt, rotten, folds"

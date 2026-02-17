@@ -1,0 +1,39 @@
+# Phase 3: Authentication Classification
+# YOLO11 Classification configuration
+
+model:
+  architecture: "yolo11s-cls.pt"
+  task: "classify"
+  pretrained: true
+
+data:
+  config: "data/processed/phase3"
+  imgsz: 224
+
+training:
+  epochs: 100
+  batch: 32
+  patience: 20
+  optimizer: "AdamW"
+  lr0: 0.001
+  lrf: 0.01
+  weight_decay: 0.001
+  warmup_epochs: 5
+  cos_lr: true
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.4
+  hsv_v: 0.3
+  degrees: 15.0
+  translate: 0.1
+  scale: 0.3
+  flipud: 0.0
+  fliplr: 0.5
+  erasing: 0.2
+
+output:
+  project: "runs/phase3"
+  name: "authentication"
+  save_period: 5
+  plots: true

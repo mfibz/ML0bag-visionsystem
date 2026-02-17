@@ -1,0 +1,42 @@
+# Phase 1: Bag Detection + Brand Logo Detection
+# YOLO11 Object Detection configuration
+
+model:
+  architecture: "yolo11m.pt"
+  task: "detect"
+  pretrained: true
+
+data:
+  config: "data/processed/phase1/data.yaml"
+  imgsz: 640
+
+training:
+  epochs: 150
+  batch: 16
+  patience: 30
+  optimizer: "AdamW"
+  lr0: 0.001
+  lrf: 0.01
+  weight_decay: 0.0005
+  warmup_epochs: 5
+  cos_lr: true
+  close_mosaic: 15
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.7
+  hsv_v: 0.4
+  degrees: 10.0
+  translate: 0.1
+  scale: 0.5
+  shear: 2.0
+  flipud: 0.0
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.1
+
+output:
+  project: "runs/phase1"
+  name: "detection"
+  save_period: 10
+  plots: true

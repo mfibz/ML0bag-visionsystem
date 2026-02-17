@@ -1,0 +1,43 @@
+# Inference pipeline configuration
+
+models:
+  phase1:
+    weights: "models/phase1/best.pt"
+    task: "detect"
+    conf_threshold: 0.5
+    iou_threshold: 0.45
+    imgsz: 640
+
+  phase2:
+    weights: "models/phase2/best.pt"
+    task: "detect"
+    conf_threshold: 0.3
+    iou_threshold: 0.5
+    imgsz: 640
+
+  phase3:
+    weights: "models/phase3/best.pt"
+    task: "classify"
+    conf_threshold: 0.6
+    imgsz: 224
+
+pipeline:
+  # Run phases sequentially: detect bag -> assess condition -> authenticate
+  cascade: true
+  # Crop detected bag region before passing to phase 2 and 3
+  crop_detections: true
+  # Padding ratio around detected bag for cropping
+  crop_padding: 0.1
+
+camera:
+  source: 0  # 0 for webcam, or path to video file
+  width: 1280
+  height: 720
+  fps: 30
+
+display:
+  show_boxes: true
+  show_labels: true
+  show_confidence: true
+  line_width: 2
+  font_scale: 0.6

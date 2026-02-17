@@ -1,0 +1,53 @@
+# Multi-phase training configuration
+# Used by src/models/trainer.py
+
+detection:
+  model: "yolo11m.pt"
+  data_yaml: "data/processed/phase1/data.yaml"
+  epochs: 150
+  imgsz: 640
+  batch: 16
+  patience: 30
+  lr0: 0.001
+  lrf: 0.01
+  weight_decay: 0.0005
+  warmup_epochs: 5
+  cos_lr: true
+  close_mosaic: 15
+  run_name: "detection_v1"
+  extra_params:
+    mosaic: 1.0
+    mixup: 0.1
+
+condition:
+  model: "yolo11m.pt"
+  data_yaml: "data/processed/phase2/data.yaml"
+  epochs: 200
+  imgsz: 640
+  batch: 16
+  patience: 40
+  lr0: 0.0005
+  lrf: 0.01
+  weight_decay: 0.0005
+  warmup_epochs: 10
+  cos_lr: true
+  close_mosaic: 20
+  run_name: "condition_v1"
+  extra_params:
+    mosaic: 1.0
+    mixup: 0.15
+    copy_paste: 0.1
+
+authentication:
+  model: "yolo11s-cls.pt"
+  data_yaml: "data/processed/phase3"
+  epochs: 100
+  imgsz: 224
+  batch: 32
+  patience: 20
+  lr0: 0.001
+  lrf: 0.01
+  weight_decay: 0.001
+  warmup_epochs: 5
+  cos_lr: true
+  run_name: "auth_v1"

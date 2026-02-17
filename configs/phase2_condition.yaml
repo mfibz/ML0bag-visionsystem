@@ -1,0 +1,43 @@
+# Phase 2: Condition Assessment / Defect Detection
+# YOLO11 Object Detection (or Segmentation) configuration
+
+model:
+  architecture: "yolo11m.pt"  # Use yolo11m-seg.pt for segmentation
+  task: "detect"  # Change to "segment" if using segmentation model
+  pretrained: true
+
+data:
+  config: "data/processed/phase2/data.yaml"
+  imgsz: 640
+
+training:
+  epochs: 200
+  batch: 16
+  patience: 40
+  optimizer: "AdamW"
+  lr0: 0.0005
+  lrf: 0.01
+  weight_decay: 0.0005
+  warmup_epochs: 10
+  cos_lr: true
+  close_mosaic: 20
+
+augmentation:
+  hsv_h: 0.015
+  hsv_s: 0.5
+  hsv_v: 0.3
+  degrees: 15.0
+  translate: 0.15
+  scale: 0.6
+  shear: 3.0
+  flipud: 0.5
+  fliplr: 0.5
+  mosaic: 1.0
+  mixup: 0.15
+  copy_paste: 0.1
+
+output:
+  project: "runs/phase2"
+  name: "condition"
+  save_period: 10
+  plots: true

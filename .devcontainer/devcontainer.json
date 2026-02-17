@@ -1,0 +1,38 @@
+{
+  "name": "VentaVivo Dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "moby": false
+    }
+  },
+  
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "expo.vscode-expo-tools"
+      ]
+    }
+  },
+  
+  "forwardPorts": [3000, 5432, 6379, 8081],
+  
+  "mounts": [
+    "source=claude-config,target=/home/node/.claude,type=volume"
+  ],
+  
+  "remoteUser": "node",
+  
+  "remoteEnv": {
+    "PATH": "/home/node/.npm-global/bin:${containerEnv:PATH}"
+  },
+  
+  "postCreateCommand": "npm config set prefix /home/node/.npm-global && npm install -g @anthropic-ai/claude-code @nestjs/cli && echo 'export PATH=\"/home/node/.npm-global/bin:$PATH\"' >> /home/node/.bashrc"
+}

@@ -1,0 +1,40 @@
+# Dataset source configuration
+datasets:
+  lffd:
+    name: "Innovatiana Luxury Fashion Fraud Detection"
+    source: "huggingface"
+    repo_id: "Innovatiana/innv-luxury-fashion-dataset-fraud-detection"
+    output_dir: "data/raw/lffd"
+    description: "12,379 Chanel product images with 357 category labels"
+    phase: 3  # Authentication
+
+  kaputt:
+    name: "Kaputt Visual Defect Detection"
+    source: "web"
+    url: "https://www.kaputt-dataset.com/"
+    output_dir: "data/raw/kaputt"
+    description: "238K images, 7 defect types, segmentation masks"
+    phase: 2  # Condition assessment
+    filter_categories:
+      - "penetration"
+      - "superficial"
+      - "deformation"
+
+  roboflow_logos:
+    name: "Detection Bag Logo (CVandDL)"
+    source: "roboflow"
+    workspace: "cvanddl"
+    project: "detection-bag-logo"
+    version: 1
+    format: "yolov8"
+    output_dir: "data/raw/roboflow_logos"
+    description: "1,920 images, 24 luxury brand logo classes"
+    phase: 1  # Detection
+
+  leather_defects:
+    name: "Leather Defect Classification"
+    source: "kaggle"
+    dataset_id: "praveen2084/leather-defect-classification"
+    output_dir: "data/raw/leather_defects"
+    description: "Leather defect images: holes, scratches, dirt, rotten, folds"
+    phase: 2  # Condition assessment
